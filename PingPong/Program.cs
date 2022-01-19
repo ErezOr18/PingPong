@@ -24,7 +24,9 @@ namespace PingPong
             var server = new PingPong.Server.Server(localEndPoint,send,read);
             server.StartListening();
             var client = new PingPong.Client.SocketClient(localEndPoint);
-            client.RunClient();
+            client.InitClient();
+            client.SendMessge("erez");
+            client.TryReceive();
         }
     }
 }

@@ -4,11 +4,13 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Text;
 using PingPong.Common;
+using log4net;
+using System.Reflection;
 
 namespace PingPong.Client
 {
 
-    public  class SocketClient
+    public class SocketClient : IDisposable
     {
 
         private IPEndPoint _server;
@@ -16,10 +18,9 @@ namespace PingPong.Client
         private ManualResetEvent connectDone;
         private ManualResetEvent sendDone;
         private ManualResetEvent receiveDone;
-
-        // The response from the remote device.  
         private String response = String.Empty;
-
+        private ILog _log;
+        private Socket _client;
 
         public SocketClient(IPEndPoint server)
         {
@@ -27,78 +28,66 @@ namespace PingPong.Client
             connectDone = new ManualResetEvent(false);
             sendDone = new ManualResetEvent(false);
             receiveDone = new ManualResetEvent(false);
+            _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         }
-        public void RunClient()
+        public void InitClient()
         {
             try
             {
-
-
-                Socket client = new Socket(_server.AddressFamily,
+                _client = new Socket(_server.AddressFamily,
                     SocketType.Stream, ProtocolType.Tcp);
 
-                client.BeginConnect(_server,
-                            new AsyncCallback(ConnectCallback), client);
+                _client.BeginConnect(_server,
+                            new AsyncCallback(ConnectCallback), _client);
                 connectDone.WaitOne();
-
-                Send(client, "This is a test<EOF>");
-                sendDone.WaitOne();
-
-
-                Receive(client);
-                receiveDone.WaitOne();
-
-
-                Console.WriteLine("Response received : {0}", response);
-
-                client.Shutdown(SocketShutdown.Both);
-                client.Close();
 
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                _log.Info(e);
             }
         }
 
+        public void SendMessge(string data)
+        {
+            Send(data);
+            sendDone.WaitOne();
+        }
 
+        public void TryReceive()
+        {
+            Receive();
+            receiveDone.WaitOne();
+        }
         private void ConnectCallback(IAsyncResult ar)
         {
             try
             {
-                // Retrieve the socket from the state object.  
-                Socket client = (Socket)ar.AsyncState;
 
-                // Complete the connection.  
-                client.EndConnect(ar);
+                _client.EndConnect(ar);
 
-                Console.WriteLine("Socket connected to {0}",
-                    client.RemoteEndPoint.ToString());
-
-                // Signal that the connection has been made.  
+                _log.Info($"Socket connected to {_client.RemoteEndPoint}");
+ 
                 connectDone.Set();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                _log.Error(e);
             }
         }
 
-        private void Receive(Socket client)
+        private void Receive()
         {
             try
-            {
-                // Create the state object.  
+            { 
                 StateObject state = new StateObject();
-                state.WorkSocket = client;
-
-                // Begin receiving the data from the remote device.  
-                client.BeginReceive(state.MessageBuffer, 0, StateObject.BufferSize, 0,
+                state.WorkSocket = _client; 
+                _client.BeginReceive(state.MessageBuffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                _log.Error(e);
             }
         }
 
@@ -106,70 +95,62 @@ namespace PingPong.Client
         {
             try
             {
-                // Retrieve the state object and the client socket
-                // from the asynchronous state object.  
-                StateObject state = (StateObject)ar.AsyncState;
-                Socket client = state.WorkSocket;
 
-                // Read data from the remote device.  
-                int bytesRead = client.EndReceive(ar);
+                var state = (StateObject)ar;
+                int bytesRead = _client.EndReceive(ar);
 
                 if (bytesRead > 0)
                 {
-                    // There might be more data, so store the data received so far.  
                     state.MessageStringBuilder.Append(Encoding.ASCII.GetString(state.MessageBuffer, 0, bytesRead));
-
-                    // Get the rest of the data.  
-                    client.BeginReceive(state.MessageBuffer, 0, StateObject.BufferSize, 0,
+ 
+                    _client.BeginReceive(state.MessageBuffer, 0, StateObject.BufferSize, 0,
                         new AsyncCallback(ReceiveCallback), state);
                 }
                 else
                 {
-                    // All the data has arrived; put it in response.  
+ 
                     if (state.MessageStringBuilder.Length > 1)
                     {
                         response = state.MessageStringBuilder.ToString();
                     }
-                    // Signal that all bytes have been received.  
+                    
                     receiveDone.Set();
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                _log.Error(e);
             }
         }
 
-        private void Send(Socket client, String data)
-        {
-            // Convert the string data to byte data using ASCII encoding.  
+        private void Send(String data)
+        { 
             byte[] byteData = Encoding.ASCII.GetBytes(data);
-
-            // Begin sending the data to the remote device.  
-            client.BeginSend(byteData, 0, byteData.Length, 0,
-                new AsyncCallback(SendCallback), client);
+            _client.BeginSend(byteData, 0, byteData.Length, 0,
+                new AsyncCallback(SendCallback), _client);
         }
 
 
         private void SendCallback(IAsyncResult ar)
         {
             try
-            {
-                // Retrieve the socket from the state object.  
+            { 
                 Socket client = (Socket)ar.AsyncState;
-
-                // Complete sending the data to the remote device.  
+  
                 int bytesSent = client.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to server.", bytesSent);
-
-                // Signal that all bytes have been sent.  
+                _log.Info($"Sent {bytesSent} bytes to server."); 
                 sendDone.Set();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                _log.Error(e);
             }
         }
 
+        public void Dispose()
+        {
+            _client.Shutdown(SocketShutdown.Both);
+            _client.Close();
+        }
     }
 }
