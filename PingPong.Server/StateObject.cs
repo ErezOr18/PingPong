@@ -9,12 +9,18 @@ namespace PingPong.Server
 
         public const int BufferSize = 1024;
 
-        public byte[] buffer = new byte[BufferSize];
+        public byte[] MessageBuffer;
 
-        public StringBuilder sb = new StringBuilder();
+        public StringBuilder MessageStringBuilder;
 
-        public Socket workSocket = null;
+        public Socket WorkSocket;
 
+        public StateObject()
+        {
+            MessageBuffer = new byte[BufferSize];
+            MessageStringBuilder = new StringBuilder();
+            WorkSocket = null;
+        }
 
     }
 
