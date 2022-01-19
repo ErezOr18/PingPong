@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 
-namespace PingPong.Server
+namespace PingPong.Common 
 {
     public class StateObject
     {

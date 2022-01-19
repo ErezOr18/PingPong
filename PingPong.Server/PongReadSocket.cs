@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using log4net;
+using PingPong.Common;
 
 namespace PingPong.Server
 {

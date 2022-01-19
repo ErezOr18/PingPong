@@ -23,7 +23,8 @@ namespace PingPong
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
             var server = new PingPong.Server.Server(localEndPoint,send,read);
             server.StartListening();
-            PingPong.Client.AsynchronousClient.StartClient();
+            var client = new PingPong.Client.SocketClient(localEndPoint);
+            client.RunClient();
         }
     }
 }

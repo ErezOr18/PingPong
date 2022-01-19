@@ -6,6 +6,7 @@ using System.Threading;
 using log4net;
 using System.Reflection;
 using System.Threading.Tasks;
+using PingPong.Common;
 // State object for reading client data asynchronously  
 namespace PingPong.Server
 {
