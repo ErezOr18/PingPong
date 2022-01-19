@@ -7,7 +7,4 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\PingPong.Common\PingPong.Common.csproj" />
-  </ItemGroup>
 </Project>
