@@ -30,5 +30,11 @@ namespace pingPong.CoreAbstractions.BaseImpl
             var asBytes = _encoding.GetBytes(value);
             _socket.Send(asBytes);
         }
+
+        public void Close()
+        {
+
+            _socket.Close();
+        }
     }
 }

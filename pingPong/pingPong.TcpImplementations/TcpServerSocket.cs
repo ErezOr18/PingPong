@@ -8,13 +8,9 @@ namespace pingPong.TcpImplementations
     public class TcpServerSocket : IServerListeningSocket
     {
         private readonly TcpListener _server;
-        private readonly IPAddress _addr;
-        private readonly int _port;
 
         public TcpServerSocket(IPAddress addr, int port)
         {
-            _addr = addr;
-            _port = port;
             _server = new TcpListener(addr, port);
         }
 

@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace pingPong.CoreAbstractions.BaseImpl
 {
-    public class ListenerBase : IListener
+    public class ListenerBase<T> : IListener 
     {
         private readonly int _port;
-        private readonly IClientHandlerFactory _clientHandlerFactory;
+        private readonly IClientHandlerFactory<T> _clientHandlerFactory;
         private readonly ServerListeningSocketFactoryBase _serverSocketFactory;
         private readonly ILog _logger;
 
-        public ListenerBase(int port, IClientHandlerFactory clientHandlerFactory, ServerListeningSocketFactoryBase serverSocketFactory)
+        public ListenerBase(int port, IClientHandlerFactory<T> clientHandlerFactory, ServerListeningSocketFactoryBase serverSocketFactory)
         {
             _port = port;
             _clientHandlerFactory = clientHandlerFactory;

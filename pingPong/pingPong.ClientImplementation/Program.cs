@@ -10,7 +10,7 @@ namespace pingPong.ClientImplementation
         {
             XmlConfigurator.Configure();
 
-            var client = new Client(new SocketConnector());
+            var client = new Client(new TcpSocketOrchestrator());
             client.Run(args[1], int.Parse(args[0]));
         }
     }

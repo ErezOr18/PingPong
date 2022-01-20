@@ -12,6 +12,12 @@ namespace pingPong.TcpImplementations
             _client = client;
         }
 
+        public void Close()
+        {
+            _client.GetStream().Close();
+            _client.Close();
+        }
+
         public int Receive(byte[] buffer)
         {
             return _client.GetStream().Read(buffer, 0, buffer.Length);

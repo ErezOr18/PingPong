@@ -1,4 +1,5 @@
-﻿using pingPong.CoreAbstractions.BaseImpl;
+﻿using pingPong.Common;
+using pingPong.CoreAbstractions.BaseImpl;
 using pingPong.SocketImplementation;
 
 namespace pingPong
@@ -20,8 +21,8 @@ namespace pingPong
 
             var serverFactory = new SocketServerFactory();
 
-            var handlerFactory = new ClientHandlerFactory();
-            var listener = new ListenerBase(port, handlerFactory, serverFactory);
+            var handlerFactory = new PersonClientHandlerFactory();
+            var listener = new ListenerBase<Person>(port, handlerFactory, serverFactory);
             listener.StartListening();
         }
     }

@@ -23,7 +23,6 @@ namespace pingPong.ClientImplementation
         {
             _logger.Info($"Connecting to {ip}:{port}");
             var socket = _socketOrchestrator.Connect(IPAddress.Parse(ip), port);
-            var stringSocket = new StringSocket(socket, 1024);
             var personSocket = new PersonSocket(socket);
             _logger.Debug("Connected");
             string msg;
@@ -34,7 +33,7 @@ namespace pingPong.ClientImplementation
                 string name = msg;
                 Console.WriteLine("Enter Age:");
                 int age = int.Parse(Console.ReadLine());   
-                Person person = new Person(name, age);
+                var person = new Person(name, age);
                 personSocket.Send(person);
                 var received = personSocket.Receive();
                 Console.WriteLine($"Server Replied {received}");

@@ -12,6 +12,11 @@ namespace pingPong.SocketImplementation
             _client = client;
         }
 
+        public void Close()
+        {
+            _client.Close();
+        }
+
         public int Receive(byte[] buffer)
         {
             return _client.Receive(buffer);

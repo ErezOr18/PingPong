@@ -15,6 +15,11 @@ namespace pingPong.Common
             _binaryFormatter = new BinaryFormatter();
         }
 
+        public void Close()
+        {
+            _socket.Close();    
+        }
+
         public Person Receive()
         {
             var data = new byte[256];

@@ -6,5 +6,7 @@ namespace pingPong.SocketsAbstractions
         public int Receive(byte[] buffer);
 
         public void Send(byte[] data);
+        
+        public void Close();
     }
 }
