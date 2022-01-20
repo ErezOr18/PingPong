@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "PingPong": {
-      "commandName": "Project",
-      "commandLineArgs": "11001"
-    }
-  }
-}
