@@ -95,8 +95,7 @@ namespace PingPong.Client
         {
             try
             {
-
-                var state = (StateObject)ar;
+                var state = (StateObject)ar.AsyncState;
                 int bytesRead = _client.EndReceive(ar);
 
                 if (bytesRead > 0)
@@ -108,13 +107,13 @@ namespace PingPong.Client
                 }
                 else
                 {
- 
                     if (state.MessageStringBuilder.Length > 1)
                     {
                         response = state.MessageStringBuilder.ToString();
                     }
                     
                     receiveDone.Set();
+                    _log.Info($"received data from server,data: {response}");
                 }
             }
             catch (Exception e)

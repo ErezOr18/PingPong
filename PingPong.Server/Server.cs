@@ -69,7 +69,7 @@ namespace PingPong.Server
             Socket listener = (Socket)ar.AsyncState;
             Socket handler = listener.EndAccept(ar);
 
-            _log.Info($"Accepted New Client {handler}");
+            _log.Info($"Accepted New Client {handler.RemoteEndPoint}");
 
             StateObject state = new StateObject();
             state.WorkSocket = handler;

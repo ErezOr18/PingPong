@@ -1,12 +1,15 @@
-﻿using System;
+﻿using log4net.Config;
+using System;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace PingPong
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
+            XmlConfigurator.Configure();
             int port;
             if (args.Length > 0)
             {
@@ -22,11 +25,12 @@ namespace PingPong
             IPAddress ipAddress = ipHostInfo.AddressList[0];
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
             var server = new PingPong.Server.Server(localEndPoint,send,read);
-            server.StartListening();
+            var serverTask = server.StartListening();
             var client = new PingPong.Client.SocketClient(localEndPoint);
             client.InitClient();
             client.SendMessge("erez");
             client.TryReceive();
+            await serverTask;
         }
     }
 }

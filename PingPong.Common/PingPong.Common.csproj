@@ -2,9 +2,6 @@
 
  <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>disable</Nullable>
   </PropertyGroup>
 
 </Project>
