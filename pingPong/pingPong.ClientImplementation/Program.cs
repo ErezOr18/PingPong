@@ -1,4 +1,6 @@
-﻿using pingPong.SocketImplementation;
+﻿using log4net.Config;
+using pingPong.SocketImplementation;
+using System.Net;
 
 namespace pingPong.ClientImplementation
 {
@@ -6,8 +8,10 @@ namespace pingPong.ClientImplementation
     {
         static void Main(string[] args)
         {
+            XmlConfigurator.Configure();
+
             var client = new Client(new SocketConnector());
-            client.Run("127.0.0.1", 11001);
+            client.Run(args[1], int.Parse(args[0]));
         }
     }
 }

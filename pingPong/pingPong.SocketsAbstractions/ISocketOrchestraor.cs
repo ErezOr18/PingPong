@@ -2,7 +2,7 @@
 
 namespace pingPong.SocketsAbstractions
 {
-    public interface ISocketConnector
+    public interface ISocketOrchestraor
     {
         public ISocket Connect(IPAddress addr, int port);
     }

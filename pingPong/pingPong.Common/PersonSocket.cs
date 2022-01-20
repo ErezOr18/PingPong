@@ -1,29 +1,34 @@
 ﻿
 using pingPong.SocketsAbstractions;
-using System.Text.Json;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace pingPong.Common
 {
     public class PersonSocket : IObjectSocket<Person>
     {
-        private readonly IObjectSocket<string> _stringSocket;
-
-        public PersonSocket(IObjectSocket<string> stringSocket)
+        private readonly ISocket _socket;
+        private BinaryFormatter _binaryFormatter;
+        public PersonSocket(ISocket socket)
         {
-            _stringSocket = stringSocket;
+            _socket = socket;
+            _binaryFormatter = new BinaryFormatter();
         }
 
         public Person Receive()
         {
-            var json = _stringSocket.Receive();
-
-            return JsonSerializer.Deserialize<Person>(json);
+            var data = new byte[256];
+            _socket.Receive(data);
+            var memoryStream = new MemoryStream(data);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return _binaryFormatter.Deserialize(memoryStream) as Person;
         }
 
         public void Send(Person value)
         {
-            var json = JsonSerializer.Serialize(value);
-            _stringSocket.Send(json);
+            var memoryStream = new MemoryStream();
+            _binaryFormatter.Serialize(memoryStream, value);
+            _socket.Send(memoryStream.ToArray());
         }
     }
 }

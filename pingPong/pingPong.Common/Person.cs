@@ -1,10 +1,13 @@
-﻿namespace pingPong.Common
+﻿using System;
+
+namespace pingPong.Common
 {
+    [Serializable]
     public class Person
     {
         private string _name;
-        private int _age;
 
+        private int _age;
         public Person(string name, int age)
         {
             _name = name;

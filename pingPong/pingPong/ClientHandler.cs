@@ -1,24 +1,38 @@
-﻿using pingPong.CoreAbstractions.Listener;
+﻿using pingPong.Common;
+using pingPong.CoreAbstractions.Listener;
 using pingPong.SocketsAbstractions;
+using System.Threading.Tasks;
 
 namespace pingPong
 {
     public class ClientHandler : IClientHandler
     {
-        private readonly IObjectSocket<string> _socket;
+        private readonly IObjectSocket<Person> _socket;
 
-        public ClientHandler(IObjectSocket<string> socket)
+        public ClientHandler(IObjectSocket<Person> socket)
         {
             _socket = socket;
         }
 
-        public void HandleClient()
+        public async Task HandleClient()
         {
-            string value;
-            while ((value = _socket.Receive()).Length > 0)
+            Person value;
+            Task ttl;
+            Task first;
+            do
             {
-                _socket.Send(value);
-            }
+                ttl = Task.Delay(5000);
+                var receive = Task.Run(async () =>
+                {
+                    while ((value = _socket.Receive()) == null)
+                    {
+                        System.Console.WriteLine("here");
+                        await Task.Delay(200);
+                    }
+                    _socket.Send(value);
+                });
+                first = await Task.WhenAny(ttl, receive);
+            } while (first != ttl);
         }
     }
 }

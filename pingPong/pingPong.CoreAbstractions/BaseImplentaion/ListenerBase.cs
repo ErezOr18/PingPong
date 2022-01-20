@@ -12,10 +12,10 @@ namespace pingPong.CoreAbstractions.BaseImpl
     {
         private readonly int _port;
         private readonly IClientHandlerFactory _clientHandlerFactory;
-        private readonly ServerListeningSocketBase _serverSocketFactory;
+        private readonly ServerListeningSocketFactoryBase _serverSocketFactory;
         private readonly ILog _logger;
 
-        public ListenerBase(int port, IClientHandlerFactory clientHandlerFactory, ServerListeningSocketBase serverSocketFactory)
+        public ListenerBase(int port, IClientHandlerFactory clientHandlerFactory, ServerListeningSocketFactoryBase serverSocketFactory)
         {
             _port = port;
             _clientHandlerFactory = clientHandlerFactory;
@@ -33,11 +33,11 @@ namespace pingPong.CoreAbstractions.BaseImpl
                 {
                     _logger.Debug("Waiting For Client...");
                     var client = server.AcceptClient();
-                    _logger.Debug("Client Connected");
+                    _logger.Info($"New Client Connected {client}");
                     var handler = _clientHandlerFactory.Create(client);
-                    Task.Run(() =>
+                    Task.Run(async () =>
                     {
-                        handler.HandleClient();
+                        await handler.HandleClient();
                     });
                 }
             }

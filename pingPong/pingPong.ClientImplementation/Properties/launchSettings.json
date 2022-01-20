@@ -2,7 +2,7 @@
   "profiles": {
     "pingPong.ClientImplementation": {
       "commandName": "Project",
-      "commandLineArgs": "11001"
+      "commandLineArgs": "11001 127.0.0.1"
     }
   }
 }

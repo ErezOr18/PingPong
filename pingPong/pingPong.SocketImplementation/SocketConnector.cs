@@ -4,7 +4,7 @@ using System.Net.Sockets;
 
 namespace pingPong.SocketImplementation
 {
-    public class SocketConnector : ISocketConnector
+    public class SocketConnector : ISocketOrchestraor
     {
         public ISocket Connect(IPAddress addr, int port)
         {

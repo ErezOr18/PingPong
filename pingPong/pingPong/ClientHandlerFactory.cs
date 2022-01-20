@@ -1,4 +1,5 @@
-﻿using pingPong.CoreAbstractions.BaseImpl;
+﻿using pingPong.Common;
+using pingPong.CoreAbstractions.BaseImpl;
 using pingPong.CoreAbstractions.Listener;
 using pingPong.SocketsAbstractions;
 
@@ -9,7 +10,7 @@ namespace pingPong
         private const int STRING_BUFFER_SIZE = 1024;
         public IClientHandler Create(ISocket socket)
         {
-            return new ClientHandler(new StringSocket(socket, STRING_BUFFER_SIZE));
+            return new ClientHandler(new PersonSocket(socket));
         }
     }
 }

@@ -3,9 +3,9 @@ using System.Net;
 
 namespace pingPong.TcpImplementations
 {
-    public class TcpServerFactory : ServerListeningSocketBase
+    public class TcpServerFactory : ServerListeningSocketFactoryBase
     {
-        public IServerListeningSocket Create(IPAddress address, int port)
+        public override IServerListeningSocket Create(IPAddress address, int port)
         {
             return new TcpServerSocket(address, port);
         }

@@ -1,4 +1,5 @@
 ﻿using log4net;
+using pingPong.Common;
 using pingPong.CoreAbstractions.BaseImpl;
 using pingPong.SocketsAbstractions;
 using System;
@@ -9,32 +10,36 @@ namespace pingPong.ClientImplementation
 {
     internal class Client
     {
-        private readonly ISocketConnector _socketConnector;
+        private readonly ISocketOrchestraor _socketOrchestrator;
         private readonly ILog _logger;
 
-        public Client(ISocketConnector socketConnector)
+        public Client(ISocketOrchestraor socketOrchestraor)
         {
-            _socketConnector = socketConnector;
+            _socketOrchestrator = socketOrchestraor;
             _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         }
 
         public void Run(string ip, int port)
         {
-            _logger.Debug($"Connecting to {ip}:{port}");
-            var socket = _socketConnector.Connect(IPAddress.Parse(ip), port);
+            _logger.Info($"Connecting to {ip}:{port}");
+            var socket = _socketOrchestrator.Connect(IPAddress.Parse(ip), port);
             var stringSocket = new StringSocket(socket, 1024);
+            var personSocket = new PersonSocket(socket);
             _logger.Debug("Connected");
             string msg;
             do
             {
-                Console.WriteLine("Enter Message:");
+                Console.WriteLine("Enter Name:");
                 msg = Console.ReadLine();
-
-                stringSocket.Send(msg);
-                var received = stringSocket.Receive();
+                string name = msg;
+                Console.WriteLine("Enter Age:");
+                int age = int.Parse(Console.ReadLine());   
+                Person person = new Person(name, age);
+                personSocket.Send(person);
+                var received = personSocket.Receive();
                 Console.WriteLine($"Server Replied {received}");
             } while (msg != "stop");
-            _logger.Debug("Ended");
+            _logger.Info("Client has Ended connection");
         }
     }
 }

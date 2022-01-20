@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace pingPong.SocketImplementation
 {
-    public class SocketOrchestraor:ISocket
+    public class SocketOrchestraor : ISocket
     {
         private readonly Socket _client;
 
