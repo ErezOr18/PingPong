@@ -25,12 +25,20 @@ namespace PingPong
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddress = ipHostInfo.AddressList[0];
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
-            var server = new PingPong.Server.Server(localEndPoint,send,read);
+            var server = new PingPong.Server.Server(localEndPoint, send, read);
             var serverTask = server.StartListening();
-            var client = new PingPong.Client.SocketClient(localEndPoint);
-            byte[] byteData = Encoding.ASCII.GetBytes("erez");
-            client.SendMessge(byteData);
-            client.TryReceive();
+            var client = new PingPong.Client.Client(localEndPoint);
+            while (true)
+            {
+
+                Console.WriteLine("Enter Input:");
+                string msg = Console.ReadLine();
+                byte[] byteData = Encoding.ASCII.GetBytes(msg);
+                client.SendMessage(byteData);
+                var serverMsg = client.ReadMessage();
+                var parsed = Encoding.ASCII.GetString(serverMsg);
+                Console.WriteLine($"received from server {parsed}");
+            }
             await serverTask;
         }
     }
