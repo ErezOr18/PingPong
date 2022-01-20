@@ -7,12 +7,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\pingPong.Common\pingPong.Common.csproj" />
-    <ProjectReference Include="..\pingPong.CoreAbstractions\pingPong.CoreAbstractions.csproj" />
-    <ProjectReference Include="..\pingPong.SocketImplementation\pingPong.SocketImplementation.csproj" />
-    <ProjectReference Include="..\pingPong.SocketsAbstractions\pingPong.SocketsAbstractions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.14" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="TcpFramework">
+      <HintPath>..\..\..\..\TcpFramework\TcpFramework.SocketImplentnaions.Tcp\bin\Debug\net5.0\TcpFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="TcpFramework.SocketImplentnaions.Tcp">
+      <HintPath>..\..\..\..\TcpFramework\TcpFramework.SocketImplentnaions.Tcp\bin\Debug\net5.0\TcpFramework.SocketImplentnaions.Tcp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 

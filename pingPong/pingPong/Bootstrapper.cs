@@ -1,12 +1,13 @@
 ﻿using pingPong.Common;
-using pingPong.CoreAbstractions.BaseImpl;
-using pingPong.SocketImplementation;
+using System.Net;
+using TcpFramework.Server;
+using TcpFramework.SocketImplentnaions.Tcp;
 
 namespace pingPong
 {
     internal class Bootstrapper
     {
-        public void Bootstrapp(string[] args)
+        public Server Bootstrapp(string[] args)
         {
             var port = -1;
             if (args.Length == 1 && int.TryParse(args[0], out int recvedPort))
@@ -16,14 +17,14 @@ namespace pingPong
             else
             {
                 System.Console.WriteLine("Usage: program.exe <port>");
-                return;
+                return default;
             }
 
-            var serverFactory = new SocketServerFactory();
+            var serverFactory = new TcpServerFactory();
 
             var handlerFactory = new PersonClientHandlerFactory();
-            var listener = new ListenerBase<Person>(port, handlerFactory, serverFactory);
-            listener.StartListening();
+            var server = new Server(port, handlerFactory, serverFactory.Create(IPAddress.Any,port));
+            return server;
         }
     }
 }

@@ -1,41 +1,42 @@
 ﻿using log4net;
 using pingPong.Common;
-using pingPong.CoreAbstractions.BaseImpl;
-using pingPong.SocketsAbstractions;
 using System;
+using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Runtime.Serialization;
+using TcpFramework.Client;
+using TcpFramework.Sockets;
 
 namespace pingPong.ClientImplementation
 {
-    internal class Client
+    public class Client : ClientBase
     {
-        private readonly ISocketOrchestraor _socketOrchestrator;
-        private readonly ILog _logger;
-
-        public Client(ISocketOrchestraor socketOrchestraor)
+        public Client(ISocketOrchestraor socketOrchestrator, IFormatter formatter) : base(socketOrchestrator, formatter)
         {
-            _socketOrchestrator = socketOrchestraor;
-            _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         }
 
-        public void Run(string ip, int port)
+
+        public override void Run()
         {
-            _logger.Info($"Connecting to {ip}:{port}");
-            var socket = _socketOrchestrator.Connect(IPAddress.Parse(ip), port);
-            var personSocket = new PersonSocket(socket);
-            _logger.Debug("Connected");
+            byte[] buffer = new byte[1024];
+            MemoryStream stream = new MemoryStream();
             string msg;
             do
             {
+                stream = new MemoryStream();
                 Console.WriteLine("Enter Name:");
                 msg = Console.ReadLine();
                 string name = msg;
                 Console.WriteLine("Enter Age:");
                 int age = int.Parse(Console.ReadLine());   
                 var person = new Person(name, age);
-                personSocket.Send(person);
-                var received = personSocket.Receive();
+                _formatter.Serialize(stream, person);
+                _socket.Send(stream.ToArray());
+                _socket.Receive(buffer);
+                stream = new MemoryStream(buffer);
+                stream.Seek(0, SeekOrigin.Begin);
+                var received = (Person)_formatter.Deserialize(stream);
                 Console.WriteLine($"Server Replied {received}");
             } while (msg != "stop");
             _logger.Info("Client has Ended connection");

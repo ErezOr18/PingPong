@@ -1,6 +1,7 @@
 ﻿using log4net.Config;
-using pingPong.SocketImplementation;
 using System.Net;
+using System.Runtime.Serialization.Formatters.Binary;
+using TcpFramework.SocketImplentnaions.Tcp;
 
 namespace pingPong.ClientImplementation
 {
@@ -10,8 +11,10 @@ namespace pingPong.ClientImplementation
         {
             XmlConfigurator.Configure();
 
-            var client = new Client(new TcpSocketOrchestrator());
-            client.Run(args[1], int.Parse(args[0]));
+            var client = new Client(new TcpSocketOrchestrator(), new BinaryFormatter());
+            client.Connect(new IPEndPoint(IPAddress.Parse(args[1]), int.Parse(args[0])));
+            client.Run();
+            client.Close();
         }
     }
 }

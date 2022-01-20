@@ -1,15 +1,15 @@
 ﻿using pingPong.Common;
-using pingPong.CoreAbstractions.BaseImpl;
-using pingPong.CoreAbstractions.Listener;
-using pingPong.SocketsAbstractions;
+using System.Runtime.Serialization.Formatters.Binary;
+using TcpFramework.Server.Listener;
+using TcpFramework.Sockets;
 
 namespace pingPong
 {
-    internal class PersonClientHandlerFactory : IClientHandlerFactory<Person>
+    internal class PersonClientHandlerFactory : IClientHandlerFactory
     {
-        public ClientHandlerBase<Person> Create(ISocket socket)
+        public ClientHandlerBase Create(ISocket socket)
         {
-            return new PersonClientHandler(new PersonSocket(socket));
+            return new PersonClientHandler(new BinaryFormatter(),socket);
         }
     }
 }

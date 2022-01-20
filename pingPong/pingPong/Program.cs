@@ -8,7 +8,8 @@ namespace pingPong
         {
             XmlConfigurator.Configure();
             var bootstrapper = new Bootstrapper();
-            bootstrapper.Bootstrapp(args);
+            var server = bootstrapper.Bootstrapp(args);
+            server.StartListening().Wait();
         }
     }
 }
