@@ -20,7 +20,7 @@ namespace pingPong.SocketImplementation
         public ISocket AcceptClient()
         {
             var client = _server.Accept();
-            return new SocketOrchestraor(client);
+            return new RawSocket(client);
         }
 
         public void Start()

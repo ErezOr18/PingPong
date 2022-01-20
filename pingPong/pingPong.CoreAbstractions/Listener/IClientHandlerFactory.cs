@@ -2,8 +2,8 @@
 
 namespace pingPong.CoreAbstractions.Listener
 {
-    public interface IClientHandlerFactory<T>
+    public interface IClientHandlerFactory
     {
-        ClientHandlerBase<T> Create(ISocket socket);
+        ClientHandlerBase Create(ISocket socket);
     }
 }

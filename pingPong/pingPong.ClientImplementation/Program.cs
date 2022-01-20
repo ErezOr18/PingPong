@@ -1,6 +1,5 @@
 ﻿using log4net.Config;
 using pingPong.SocketImplementation;
-using System.Net;
 
 namespace pingPong.ClientImplementation
 {

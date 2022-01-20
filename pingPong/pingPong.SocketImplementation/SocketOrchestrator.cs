@@ -10,7 +10,7 @@ namespace pingPong.SocketImplementation
         {
             var client = new Socket(SocketType.Stream, ProtocolType.Tcp);
             client.Connect(new IPEndPoint(addr, port));
-            return new SocketOrchestraor(client);
+            return new RawSocket(client);
         }
     }
 }

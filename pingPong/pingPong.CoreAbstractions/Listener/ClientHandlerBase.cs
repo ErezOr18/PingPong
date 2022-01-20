@@ -6,19 +6,17 @@ using System.Threading.Tasks;
 
 namespace pingPong.CoreAbstractions.Listener
 {
-    public abstract class ClientHandlerBase<T>
+    public abstract class ClientHandlerBase
     {
-        protected readonly IObjectSocket<T> _socket;
         protected ILog _log;
 
-        public ClientHandlerBase(IObjectSocket<T> socket)
+        public ClientHandlerBase()
         {
-            _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);   
-            _socket = socket;
+            _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         }
 
-        
-        public abstract Task HandleClient();
-            
+
+        public abstract Task HandleClient(ISocket socket);
+
     }
 }

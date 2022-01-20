@@ -9,6 +9,7 @@
     <ProjectReference Include="..\pingPong.Common\pingPong.Common.csproj" />
     <ProjectReference Include="..\pingPong.CoreAbstractions\pingPong.CoreAbstractions.csproj" />
     <ProjectReference Include="..\pingPong.SocketImplementation\pingPong.SocketImplementation.csproj" />
+    <ProjectReference Include="..\pingPong.TcpImplementations\pingPong.TcpImplementations.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.14" />

@@ -1,6 +1,5 @@
 ﻿using log4net;
 using pingPong.Common;
-using pingPong.CoreAbstractions.BaseImpl;
 using pingPong.SocketsAbstractions;
 using System;
 using System.Net;
@@ -32,7 +31,7 @@ namespace pingPong.ClientImplementation
                 msg = Console.ReadLine();
                 string name = msg;
                 Console.WriteLine("Enter Age:");
-                int age = int.Parse(Console.ReadLine());   
+                int age = int.Parse(Console.ReadLine());
                 var person = new Person(name, age);
                 personSocket.Send(person);
                 var received = personSocket.Receive();

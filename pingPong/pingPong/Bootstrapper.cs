@@ -19,10 +19,10 @@ namespace pingPong
                 return;
             }
 
-            var serverFactory = new SocketServerFactory();
+            var serverFactory = new TcpServerFactory();
 
-            var handlerFactory = new PersonClientHandlerFactory();
-            var listener = new ListenerBase<Person>(port, handlerFactory, serverFactory);
+            var handlerFactory = new ClientHandlerFactory();
+            var listener = new ListenerBase(port, handlerFactory, serverFactory);
             listener.StartListening();
         }
     }
