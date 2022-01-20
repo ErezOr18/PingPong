@@ -1,6 +1,7 @@
 ﻿using log4net.Config;
 using System;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace PingPong
@@ -27,8 +28,8 @@ namespace PingPong
             var server = new PingPong.Server.Server(localEndPoint,send,read);
             var serverTask = server.StartListening();
             var client = new PingPong.Client.SocketClient(localEndPoint);
-            client.InitClient();
-            client.SendMessge("erez");
+            byte[] byteData = Encoding.ASCII.GetBytes("erez");
+            client.SendMessge(byteData);
             client.TryReceive();
             await serverTask;
         }

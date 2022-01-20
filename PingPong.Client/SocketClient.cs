@@ -18,7 +18,6 @@ namespace PingPong.Client
         private ManualResetEvent connectDone;
         private ManualResetEvent sendDone;
         private ManualResetEvent receiveDone;
-        private String response = String.Empty;
         private ILog _log;
         private Socket _client;
 
@@ -36,11 +35,9 @@ namespace PingPong.Client
             {
                 _client = new Socket(_server.AddressFamily,
                     SocketType.Stream, ProtocolType.Tcp);
-
                 _client.BeginConnect(_server,
                             new AsyncCallback(ConnectCallback), _client);
                 connectDone.WaitOne();
-
             }
             catch (Exception e)
             {
@@ -48,8 +45,12 @@ namespace PingPong.Client
             }
         }
 
-        public void SendMessge(string data)
+        public void SendMessge(byte[] data)
         {
+            if (_client is null || !_client.Connected) 
+            {
+                InitClient();
+            }
             Send(data);
             sendDone.WaitOne();
         }
@@ -107,6 +108,7 @@ namespace PingPong.Client
                 }
                 else
                 {
+                    string response = default;
                     if (state.MessageStringBuilder.Length > 1)
                     {
                         response = state.MessageStringBuilder.ToString();
@@ -122,10 +124,9 @@ namespace PingPong.Client
             }
         }
 
-        private void Send(String data)
+        private void Send(byte[] data)
         { 
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
-            _client.BeginSend(byteData, 0, byteData.Length, 0,
+            _client.BeginSend(data, 0, data.Length, 0,
                 new AsyncCallback(SendCallback), _client);
         }
 
@@ -148,8 +149,9 @@ namespace PingPong.Client
 
         public void Dispose()
         {
-            _client.Shutdown(SocketShutdown.Both);
-            _client.Close();
+            _client?.Shutdown(SocketShutdown.Both);
+            _client?.Close();
+            _client.Dispose();
         }
     }
 }
