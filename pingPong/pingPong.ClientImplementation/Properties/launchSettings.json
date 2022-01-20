@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "pingPong.ClientImplementation": {
+      "commandName": "Project",
+      "commandLineArgs": "11001"
+    }
+  }
+}
